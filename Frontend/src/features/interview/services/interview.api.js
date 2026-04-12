@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: https://genai-resume-backend-kxru.onrender.com,
+    baseURL: "https://genai-resume-backend-kxru.onrender.com",
     withCredentials: true,
 })
 
