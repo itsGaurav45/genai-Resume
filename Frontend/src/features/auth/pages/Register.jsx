@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import "../auth.form.scss";
 
 const Register = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const { loading, handleRegister } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleRegister({ username, email, password });
-    navigate("/");
+    setError("");
+    const result = await handleRegister({ username, email, password });
+    if (result?.success) {
+      navigate("/");
+    } else {
+      setError(result?.message || "Registration failed. Please try again.");
+    }
   };
 
   if (loading) {
@@ -67,6 +74,7 @@ const Register = () => {
             />
           </div>
 
+          {error && <p style={{ color: "red", marginBottom: "8px" }}>{error}</p>}
           <button className="button primary-button">Register</button>
         </form>
 

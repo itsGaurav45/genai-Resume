@@ -1,21 +1,4 @@
-import axios from "axios";
-
-const api = axios.create({
-    baseURL: "http://localhost:3000",
-    withCredentials: true,
-})
-
-// Interceptor to handle FormData properly
-api.interceptors.request.use((config) => {
-    if (config.data instanceof FormData) {
-        // Delete Content-Type so browser can set it with proper boundary
-        delete config.headers["Content-Type"]
-    }
-    return config
-}, (error) => {
-    return Promise.reject(error)
-})
-
+import api from "../../../services/api";
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.

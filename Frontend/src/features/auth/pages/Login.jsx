@@ -9,11 +9,17 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleLogin({ email, password });
-    navigate("/");
+    setError("");
+    const result = await handleLogin({ email, password });
+    if (result?.success) {
+      navigate("/");
+    } else {
+      setError(result?.message || "Login failed. Please try again.");
+    }
   };
 
   if (loading) {
@@ -53,6 +59,7 @@ const Login = () => {
               placeholder="Enter password"
             />
           </div>
+          {error && <p style={{ color: "red", marginBottom: "8px" }}>{error}</p>}
           <button className="button primary-button">Login</button>
         </form>
         <p>
