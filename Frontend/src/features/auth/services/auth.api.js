@@ -1,6 +1,5 @@
 import api from "../../../services/api";
 
-
 export async function register({ username, email, password }) {
     try {
         const response = await api.post('/api/auth/register', {
