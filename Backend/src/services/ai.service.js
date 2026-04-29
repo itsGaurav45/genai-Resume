@@ -83,12 +83,18 @@ Return ONLY valid JSON. No markdown. No explanation.
 {
   "score": number,
   "matchPercentage": number,
-  "technicalQuestions": [],
-  "behavioralQuestions": [],
-  "roadmap": [],
-  "strengths": [],
-  "weaknesses": [],
-  "recommendations": []
+  "technicalQuestions": [
+    { "question": "string", "intention": "string", "answer": "string" }
+  ],
+  "behavioralQuestions": [
+    { "question": "string", "intention": "string", "answer": "string" }
+  ],
+  "roadmap": [
+    { "day": number, "focus": "string", "tasks": ["string"] }
+  ],
+  "strengths": ["string"],
+  "weaknesses": ["string"],
+  "recommendations": ["string"]
 }
 
 Resume: ${resume}
