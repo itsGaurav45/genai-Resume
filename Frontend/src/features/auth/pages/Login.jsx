@@ -24,8 +24,11 @@ const Login = () => {
 
   if (loading) {
     return (
-      <main>
-        <h1>Loading.......</h1>
+      <main className="loading-screen">
+        <div className="loader-content">
+          <h1>Signing you in...</h1>
+          <p>Waking up the server, please wait a moment.</p>
+        </div>
       </main>
     );
   }

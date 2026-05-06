@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import "../style/home.scss";
 import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../auth/hooks/useAuth.js";
 
 const Home = () => {
   const { loading, generateReport, reports } = useInterview();
+  const { handleLogout, user } = useAuth();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -97,6 +99,17 @@ const Home = () => {
 
   return (
     <div className="home-page">
+      {/* Top Navbar */}
+      <nav className="top-nav">
+        <div className="top-nav__logo">GenAI Resume</div>
+        <div className="top-nav__actions">
+          <span className="user-name">Hello, {user?.username || 'User'}</span>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
+        </div>
+      </nav>
+
       {/* Page Header */}
       <header className="page-header">
         <h1>
@@ -340,9 +353,10 @@ const Home = () => {
 
       {/* Page Footer */}
       <footer className="page-footer">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Help Center</a>
+        <span>&copy; 2026 GenAI Resume Sage</span>
+        <a href="javascript:void(0)">Privacy Policy</a>
+        <a href="javascript:void(0)">Terms of Service</a>
+        <a href="javascript:void(0)">Help Center</a>
       </footer>
     </div>
   );

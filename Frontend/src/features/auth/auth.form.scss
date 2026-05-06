@@ -37,6 +37,26 @@ main{
         }
     }
 
+    .loading-screen {
+        text-align: center;
+        
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            
+            h1 {
+                font-size: 1.5rem;
+                margin: 0;
+            }
+            
+            p {
+                color: #7d8590;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
     a{
         color: #e1034d;
         text-decoration: none;
