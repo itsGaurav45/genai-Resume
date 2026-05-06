@@ -25,10 +25,12 @@ $severity-low: #3fb950;
     background-color: $bg-page;
     color: $text-primary;
     font-family: $font-stack;
+    
     display: flex;
-    align-items: stretch;
-    padding: 1.5rem;
-    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1.5rem;
+    gap: 2rem;
 }
 
 // ── 3-Column Layout ───────────────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import "../style/home.scss";
 import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth.js";
+import Navbar from "../components/Navbar.jsx";
 
 const Home = () => {
   const { loading, generateReport, reports } = useInterview();
@@ -99,16 +100,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      {/* Top Navbar */}
-      <nav className="top-nav">
-        <div className="top-nav__logo">GenAI Resume</div>
-        <div className="top-nav__actions">
-          <span className="user-name">Hello, {user?.username || 'User'}</span>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Page Header */}
       <header className="page-header">
@@ -154,7 +146,7 @@ const Home = () => {
               placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
               maxLength={5000}
             />
-            <div className="char-counter">0 / 5000 chars</div>
+            <div className="char-counter">{jobDescription.length} / 5000 chars</div>
           </div>
 
           {/* Vertical Divider */}

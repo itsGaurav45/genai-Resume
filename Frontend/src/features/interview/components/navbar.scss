@@ -1,0 +1,82 @@
+$border-color:   #2a3348;
+$text-primary:   #e6edf3;
+$text-muted:     #7d8590;
+$accent:         #ff2d78;
+
+.top-nav {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $border-color;
+    margin: 0 auto 2rem;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    &__logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+        background: linear-gradient(135deg, $text-primary 0%, $text-muted 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: transparent;
+        border: none;
+        color: $text-muted;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $text-primary;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+        .user-name {
+            font-size: 0.875rem;
+            color: $text-muted;
+            font-weight: 500;
+
+            @media (max-width: 480px) {
+                display: none;
+            }
+        }
+    }
+
+    .logout-btn {
+        background: rgba($accent, 0.1);
+        border: 1px solid rgba($accent, 0.3);
+        color: $accent;
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            background: $accent;
+            color: white;
+            border-color: $accent;
+        }
+    }
+}
