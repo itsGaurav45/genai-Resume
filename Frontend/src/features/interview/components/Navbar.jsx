@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useAuth } from "../auth/hooks/useAuth";
 import "./navbar.scss";
 
@@ -10,7 +10,7 @@ const Navbar = ({ showBack = false }) => {
   return (
     <nav className="top-nav">
       <div className="top-nav__left">
-        <Link to="/" className="top-nav__logo">GenAI Resume</Link>
+
         {showBack && (
           <button onClick={() => navigate("/")} className="back-btn">
             <svg
