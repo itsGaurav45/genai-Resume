@@ -6,11 +6,6 @@ export async function register({ username, email, password }) {
             username, email, password
         })
 
-        const { token, user } = response.data
-        if (token) {
-            localStorage.setItem("token", token)
-        }
-
         return response.data
 
     } catch (err) {

@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useLocation } from "react-router";
 import "../auth.form.scss";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const { loading, handleLogin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const successMessage = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +40,11 @@ const Login = () => {
     <main>
       <div className="form-container">
         <h1>Login</h1>
+        {successMessage && (
+          <p style={{ color: "#22c55e", backgroundColor: "rgba(34, 197, 94, 0.1)", padding: "8px 12px", borderRadius: "6px", fontSize: "0.9rem", marginBottom: "12px" }}>
+            {successMessage}
+          </p>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email</label>

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { GoogleGenAI } = require("@google/genai");
 const puppeteer = require("puppeteer");
 
@@ -5,7 +6,7 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
 
-// 🔄 RETRY HELPER
+// RETRY HELPER
 async function retryWithBackoff(fn, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -34,39 +35,50 @@ async function generatePdfFromHtml(htmlContent) {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  const page = await browser.newPage();
+  try {
+    const page = await browser.newPage();
 
-  await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
-  const pdfBuffer = await page.pdf({
-    format: "A4",
-    printBackground: true,
-    margin: {
-      top: "20mm",
-      bottom: "20mm",
-      left: "15mm",
-      right: "15mm",
-    },
-  });
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "20mm",
+        bottom: "20mm",
+        left: "15mm",
+        right: "15mm",
+      },
+    });
 
-  await browser.close();
-  return pdfBuffer;
+    return pdfBuffer;
+  } finally {
+    await browser.close();
+  }
 }
 
-// 🔥 SAFE JSON PARSER (MAIN FIX)
+// JSON PARSER
 function extractJson(response) {
-  const rawText =
-    response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  let rawText =
+    response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    (typeof response?.text === "function" ? response.text() : response?.text) ||
+    "";
 
-  if (!rawText) {
+  if (!rawText || !rawText.trim()) {
     throw new Error("Empty response from AI");
   }
 
+  // Strip ```json and ``` if returned with markdown code fences
+  const cleaned = rawText
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
   try {
-    return JSON.parse(rawText);
+    return JSON.parse(cleaned);
   } catch (err) {
-    console.error("❌ Invalid JSON from AI:\n", rawText);
-    throw new Error("AI returned invalid JSON");
+    console.error(" Invalid JSON from AI:\n", rawText);
+    throw new Error("AI returned invalid JSON: " + err.message);
   }
 }
 
@@ -118,6 +130,9 @@ Job Description: ${jobDescription}
     return extractJson(response);
   } catch (error) {
     console.error("AI Interview Error:", error);
+    if (error.message?.includes("leaked") || error.status === 403 || error.message?.includes("PERMISSION_DENIED")) {
+      throw new Error("Your Gemini API key was reported is invalid. Please update GOOGLE_GENAI_API_KEY in Backend/.env with a valid API key from Google AI Studio (https://aistudio.google.com/app/apikey).");
+    }
     throw error;
   }
 }
@@ -143,20 +158,21 @@ Self Description: ${selfDescription}
 Job Description: ${jobDescription}
 `;
 
-  const response = await retryWithBackoff(async () =>
-    await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-      },
-    })
-  );
+  try {
+    const response = await retryWithBackoff(async () =>
+      await ai.models.generateContent({
+        model: "gemini-2.5-flash-lite",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+        },
+      })
+    );
 
-  const jsonContent = extractJson(response);
+    const jsonContent = extractJson(response);
 
-  // 🔥 SAME DESIGN (UNCHANGED)
-  const finalHtml = `
+    // SAME DESIGN (UNCHANGED)
+    const finalHtml = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -219,8 +235,15 @@ ${jsonContent.html}
 </html>
 `;
 
-  const pdfBuffer = await generatePdfFromHtml(finalHtml);
-  return pdfBuffer;
+    const pdfBuffer = await generatePdfFromHtml(finalHtml);
+    return pdfBuffer;
+  } catch (error) {
+    console.error("AI Resume PDF Error:", error);
+    if (error.message?.includes("leaked") || error.status === 403 || error.message?.includes("PERMISSION_DENIED")) {
+      throw new Error("Your Gemini API key was reported is invalid. Please update GOOGLE_GENAI_API_KEY in Backend/.env with a valid API key from Google AI Studio (https://aistudio.google.com/app/apikey).");
+    }
+    throw error;
+  }
 }
 
 module.exports = { generateInterviewReport, generateResumePDF };

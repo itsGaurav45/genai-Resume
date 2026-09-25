@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../auth/hooks/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth.js";
 import "./navbar.scss";
 
 const Navbar = ({ showBack = false }) => {
@@ -10,7 +10,6 @@ const Navbar = ({ showBack = false }) => {
   return (
     <nav className="top-nav">
       <div className="top-nav__left">
-
         {showBack && (
           <button onClick={() => navigate("/")} className="back-btn">
             <svg
